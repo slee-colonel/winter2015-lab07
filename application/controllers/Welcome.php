@@ -19,10 +19,28 @@ class Welcome extends Application {
     //-------------------------------------------------------------
 
     function index()
-    {
-	// Build a list of orders
-	
+    {        
+        $map = directory_map('./data/');
+        $my_map = null;
+        $i = 0;
+        
+        // Build a list of orders
+        foreach($map as $filename)
+        {
+            if( (substr_compare($filename, '.xml', strlen($filename)-4, 4) === 0)
+                && (substr_compare($filename, 'order', 0, 5) === 0))
+            {
+                $ordername = substr($filename, 0, strlen($filename)-4);
+                $my_map[$i] = array( 'filename' => $filename,
+                                     'ordername' => $ordername );
+                $i++;
+            }
+        }
+        	
+        $this->data['linklist'] = $my_map;
+        
 	// Present the list to choose from
+        $this->data['title'] = "Barker Bob's Burger Bar - Orders";
 	$this->data['pagebody'] = 'homepage';
 	$this->render();
     }
