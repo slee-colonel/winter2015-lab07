@@ -15,10 +15,10 @@ class Order extends CI_Model {
         parent::__construct();      
     }
 
-    function getOrder($filename){
-        $loadedorder = simplexml_load_file('./data/' . $filename);
+    function getOrder($num){
+        $loadedorder = simplexml_load_file('./data/order' . $num . ".xml");
         
-        $order['ordernum'] = substr($filename, 5, strlen($filename)-4);
+        $order['ordernum'] = $num;
         $order['ordername'] = "Order" . $order['ordernum'];
                
         $order['customername'] = $loadedorder->customer;

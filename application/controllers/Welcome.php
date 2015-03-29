@@ -30,8 +30,11 @@ class Welcome extends Application {
             if( (substr_compare($filename, '.xml', strlen($filename)-4, 4) === 0)
                 && (substr_compare($filename, 'order', 0, 5) === 0))
             {
+                // shave off ".xml"
                 $ordername = substr($filename, 0, strlen($filename)-4);
-                $my_map[$i] = array( 'filename' => $filename,
+                // shave off "order" and ".xml"
+                $ordernum = substr($filename, 5, strlen($filename)-9);
+                $my_map[$i] = array( 'num' => $ordernum,
                                      'ordername' => $ordername );
                 $i++;
             }
@@ -49,10 +52,10 @@ class Welcome extends Application {
     //  Show the "receipt" for a specific order
     //-------------------------------------------------------------
 
-    function order($filename)
+    function order($num)
     {
         // Build a receipt for the chosen order
-	$order = $this->order->getOrder($filename);
+	$order = $this->order->getOrder($num);
         
         $this->data['ordercustomer'] = $order['ordername'] . " for " .
                 $order['customername'] . " (" . $order['type'] . ")";

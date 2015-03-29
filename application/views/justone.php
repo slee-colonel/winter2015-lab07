@@ -5,7 +5,7 @@
     {orderspecial}</br>
     {burgerlist}
     <h5>*Burger #{burgernum}*</br></h5>
-        Base: {burgerbase} burger</br>
+        Base: {burgerbase}</br>
         Cheese: {burgercheeses}</br>
         Toppings: {burgertoppings}</br>
         Sauces: {burgersauces}</br>
