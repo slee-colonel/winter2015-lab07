@@ -44,5 +44,18 @@ class Menu extends CI_Model {
         else
             return null;
     }
+    
+    // retrieve a list of patties, to populate a dropdown, for instance
+    function cheeses() {
+        return $this->patty_names;
+    }
+
+    // retrieve a patty record, perhaps for pricing
+    function getCheese($code) {
+        if (isset($this->patties[$code]))
+            return $this->patties[$code];
+        else
+            return null;
+    }
 
 }

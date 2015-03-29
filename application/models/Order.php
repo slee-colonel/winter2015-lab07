@@ -35,6 +35,14 @@ class Order extends CI_Model {
         $count = 1;
         foreach ($loadedorder->burger as $burger) {
             $record['burgernum'] = $count;
+            $record['burgerbase'] = $burger->patty['type'];
+            if ($burger->cheeses['top'] != NULL)
+                $record['burgercheeses'] = $burger->cheeses['top'] . " (top) ";
+            if ($burger->cheeses['bottom'] != NULL)
+                $record['burgercheeses'] = $burger->cheeses['bottom'] . " (bottom) ";
+            $record['burgertoppings'] = $this->getToppings($burger);
+            $record['burgersauces'] = $this->getSauces($burger);
+            $record['burgerinstructions'] = $burger->instructions;
             $burgers[$count] = $record;
             $count++;
         }
@@ -42,12 +50,29 @@ class Order extends CI_Model {
         return $burgers;
     }
 
-    // retrieve a patty record, perhaps for pricing
-    function getPatty($code) {
-        if (isset($this->patties[$code]))
-            return $this->patties[$code];
-        else
-            return null;
+    function getToppings($burger) {
+        $first = true;
+        $toppings = "";
+        foreach ($burger->topping as $topping) {
+            if(!$first)
+                $toppings .= ", ";
+            $toppings .= $topping['type'];
+            $first = false;
+        }        
+        
+        return $toppings;
     }
-
+    
+    function getSauces($burger) {
+        $first = true;
+        $sauces = "";
+        foreach ($burger->sauce as $sauce) {
+            if(!$first)
+                $sauces .= ", ";
+            $sauces .= $sauce['type'];
+            $first = false;
+        }        
+        
+        return $sauces;
+    }
 }
