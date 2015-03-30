@@ -34,12 +34,18 @@ class Order extends CI_Model {
     function getBurgers($loadedorder) {
         $count = 1;
         foreach ($loadedorder->burger as $burger) {
+            $record = array();
             $record['burgernum'] = $count;
-            $record['burgerbase'] = $burger->patty['type'];
-            if ($burger->cheeses['top'] != NULL)
-                $record['burgercheeses'] = $burger->cheeses['top'] . " (top) ";
-            if ($burger->cheeses['bottom'] != NULL)
-                $record['burgercheeses'] = $burger->cheeses['bottom'] . " (bottom) ";
+            $record['burgerbase'] = $this->menu->getPatty($burger->patty['type']
+                )->name;
+            $record['burgercheeses'] = " ";
+            // map cheeses from code to full cheese name
+            if (isset($burger->cheeses['top']))
+                $record['burgercheeses'] .= $this->menu->getCheese($burger->
+                    cheeses['top'])->name . " (top) ";
+            if (isset($burger->cheeses['bottom']))
+                $record['burgercheeses'] .= $this->menu->getCheese($burger->
+                    cheeses['bottom'])->name . " (bottom) ";
             $record['burgertoppings'] = $this->getToppings($burger);
             $record['burgersauces'] = $this->getSauces($burger);
             $record['burgerinstructions'] = $burger->instructions;
@@ -50,26 +56,28 @@ class Order extends CI_Model {
         return $burgers;
     }
 
+    // map toppings from code to full topping name
     function getToppings($burger) {
         $first = true;
         $toppings = "";
         foreach ($burger->topping as $topping) {
             if(!$first)
-                $toppings .= ", ";
-            $toppings .= $topping['type'];
+                $toppings .= ", ";        
+            $toppings .= $this->menu->getTopping($topping['type'])->name;
             $first = false;
         }        
         
         return $toppings;
     }
     
+    // map sauces from code to full sauce name
     function getSauces($burger) {
         $first = true;
         $sauces = "";
         foreach ($burger->sauce as $sauce) {
             if(!$first)
                 $sauces .= ", ";
-            $sauces .= $sauce['type'];
+            $sauces .= $this->menu->getSauce($sauce['type'])->name;
             $first = false;
         }        
         
