@@ -27,6 +27,11 @@ class Order extends CI_Model {
         $order['special'] = $loadedorder->special;
         
         $order['burgerlist'] = $this->getBurgers($loadedorder);
+        
+        $order['ordertotal'] = 0;
+        foreach($order['burgerlist'] as $burger)
+            $order['ordertotal'] += $burger['burgertotal'];
+        
         return $order;
     }
     
@@ -35,20 +40,41 @@ class Order extends CI_Model {
         $count = 1;
         foreach ($loadedorder->burger as $burger) {
             $record = array();
+            $record['burgertotal'] = 0;
             $record['burgernum'] = $count;
+            
+            // map burger patty from code to full patty name &
+            // add price of patty to burger price
             $record['burgerbase'] = $this->menu->getPatty($burger->patty['type']
                 )->name;
-            $record['burgercheeses'] = " ";
-            // map cheeses from code to full cheese name
+            $record['burgertotal'] +=  $this->menu->getPatty($burger->patty
+                ['type'])->price;
+            
+            // map cheeses from code to full cheese name &
+            // add price of cheeses to burger price
+            $record['burgercheeses'] = "";
             if (isset($burger->cheeses['top']))
+            {
                 $record['burgercheeses'] .= $this->menu->getCheese($burger->
                     cheeses['top'])->name . " (top) ";
+                $record['burgertotal'] += $this->menu->getCheese($burger->
+                    cheeses['top'])->price;
+            }
             if (isset($burger->cheeses['bottom']))
+            {
                 $record['burgercheeses'] .= $this->menu->getCheese($burger->
                     cheeses['bottom'])->name . " (bottom) ";
-            $record['burgertoppings'] = $this->getToppings($burger);
-            $record['burgersauces'] = $this->getSauces($burger);
+                $record['burgertotal'] += $this->menu->getCheese($burger->
+                    cheeses['bottom'])->price;
+            }
+            
+            // get toppings & add price of toppings to burger price
+            $record['burgertoppings'] = $this->getToppings($burger)['list'];
+            $record['burgertotal'] += $this->getToppings($burger)['price'];
+            
+            $record['burgersauces'] = $this->getSauces($burger);            
             $record['burgerinstructions'] = $burger->instructions;
+            
             $burgers[$count] = $record;
             $count++;
         }
@@ -56,21 +82,28 @@ class Order extends CI_Model {
         return $burgers;
     }
 
-    // map toppings from code to full topping name
+    // map toppings from code to full topping name,
+    // toppings are priced
     function getToppings($burger) {
         $first = true;
-        $toppings = "";
+        $toppings = array();
+        $toppings['list'] = "";
+        $toppings['price'] = 0;
         foreach ($burger->topping as $topping) {
             if(!$first)
-                $toppings .= ", ";        
-            $toppings .= $this->menu->getTopping($topping['type'])->name;
+                $toppings['list'] .= ", ";        
+            $toppings['list'] .= $this->menu->getTopping(
+                $topping['type'])->name;
+            $toppings['price'] .= $this->menu->getTopping(
+                $topping['type'])->price;
             $first = false;
-        }        
+        }
         
         return $toppings;
     }
     
-    // map sauces from code to full sauce name
+    // map sauces from code to full sauce name,
+    // sauces are free
     function getSauces($burger) {
         $first = true;
         $sauces = "";

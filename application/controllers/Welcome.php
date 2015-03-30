@@ -35,7 +35,8 @@ class Welcome extends Application {
                 // shave off "order" and ".xml"
                 $ordernum = substr($filename, 5, strlen($filename)-9);
                 $my_map[$i] = array( 'num' => $ordernum,
-                                     'ordername' => $ordername );
+                    'ordername' => $ordername . " (" . $this->order->getOrder(
+                                   $ordernum)['customername'] . ")");
                 $i++;
             }
         }
@@ -61,9 +62,12 @@ class Welcome extends Application {
                 $order['customername'] . " (" . $order['type'] . ")";
         $this->data['orderdelivery'] = $order['delivery'];
         $this->data['orderspecial'] = $order['special'];
+        
+        // the list of burgers
         $this->data['burgerlist'] = $order['burgerlist'];
-                
-	// Present the list to choose from
+        
+        $this->data['ordertotal'] = $order['ordertotal'];
+        
 	$this->data['pagebody'] = 'justone';
 	$this->render();
     }

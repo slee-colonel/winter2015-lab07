@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Order #3 is for myself, and delivery because I'm too lazy to leave my chair
+-->
+
+<!DOCTYPE order SYSTEM 'bonanza.dtd'>
+
+<order type="delivery">
+    <customer>Sanders</customer>
+    <delivery>1234 Fake Street</delivery>
+    <burger>
+        <patty type="turkey"/>
+        <cheeses top="blue" bottom="blue"/>
+        <topping type="lettuce"/>
+        <topping type="tomato"/>
+        <topping type="dill"/>
+        <sauce type="ketchup"/>
+        <sauce type="mayo"/>   
+    </burger>
+    <burger>
+        <patty type="vege"/>
+        <cheeses top="swiss" bottom="gouda"/>
+        <topping type="lettuce"/>
+        <topping type="tomato"/>
+        <topping type="egg"/>
+        <sauce type="ketchup"/>
+        <sauce type="fksauce"/>
+        <instructions>Add some peanut butter to this one</instructions>
+    </burger>
+    <special>Please arrive at exactly 8:45pm</special>
+</order>
